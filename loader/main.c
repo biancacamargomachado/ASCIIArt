@@ -33,6 +33,15 @@ int load(char* name, Img* pic)
    return pic->height*pic->width;
 }
 
+void alterar_cor(int height, int width,Img *pic, double intensidade)
+{
+    pic->height = height;
+    pic->width = width;
+    pic->img->r = intensidade;
+    pic->img->g = intensidade;
+    pic->img->b = intensidade;
+}
+
 int main(int argc, char** argv)
 {
     Img pic;
@@ -45,6 +54,30 @@ int main(int argc, char** argv)
     int y=pic.height;
     int x=pic.width;
 
+    int image[pic.width][pic.height];
+
+    // armazena o cinza no pixel
+   // EscreveCor(x,y,i,i,i) # x,y,r,g,b
+    //tons de cinza
+    int intensidade = 0;
+    /*for (int i=0; i<5; i++){
+        int intensidade = (int)(0.3 * pic.img[i].r + 0.59 * pic.img[i].g + 0.11 * pic.img[i].b);
+        printf("%d \n",intensidade);
+        //printf("[%02X %02X %02X] ", pic.img[i].r, pic.img[i].g, pic.img[i].b);
+        //alterar_cor(&pic.img[i],(0.3 * pic.img[i].r + 0.59 * pic.img[i].g + 0.11 * pic.img[i].b));
+       // printf("[%02X %02X %02X] ", pic.img[i].r, pic.img[i].g, pic.img[i].b);
+    }*/
+    for (int i = 0; i < pic.height; i ++) {
+        //grayImage[i] = (int) ((int)image->img[i].r*0.3 + (int)image->img[i].g*0.59 + (int)image->img[i].b*0.11);
+        for (int j = 0; j < pic.width; j++) {
+            intensidade = (int) ((float)pic.img[i*pic.width+j].r*0.3 + (float)pic.img[i*pic.width+j].g*0.59 + (float)pic.img[i*pic.width+j].b*0.11);
+            printf(" %d ",intensidade);
+            alterar_cor(i,j,&pic,(0.3 * pic.img[i].r + 0.59 * pic.img[i].g + 0.11 * pic.img[i].b));
+            //continuar
+        }
+
+    }
+    printf("a");
     // Impressao do html
 
     FILE *picture; // Ponteiro que aponta para um arquivo
