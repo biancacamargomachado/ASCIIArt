@@ -119,15 +119,14 @@ int main(int argc, char** argv)
     int y=pic.height;
     int x=pic.width;
 
+    printf("Carregando...");
     //tons de cinza
     unsigned int intensidade = 0;
     for (int i = 0; i < size; i ++) {
             intensidade = (unsigned int)(pic.img[i].r*0.3 + pic.img[i].g*0.59 + pic.img[i].b*0.11);
-            printf(" %d ",intensidade);
             alterar_cor(&pic,intensidade);
     }
-
-
+    printf("Carregando...");
 
     // Impressao do html
     FILE *picture; // Ponteiro que aponta para um arquivo
