@@ -33,8 +33,8 @@ int load(char* name, Img* pic)
    return pic->height*pic->width;
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv){
+
     Img pic;
     if(argc < 1) {
         printf("loader [img]\n");
@@ -71,4 +71,30 @@ int main(int argc, char** argv)
 
 
 }
+
+/*
+void resize (){
+    Img pic;
+	int new_width = 1;
+	int new_height = 1;
+
+		if( (new_width != pic.width) || (new_height != pic.height) ){
+			unsigned char *resampled = (unsigned char*)malloc( channels*new_width*new_height );
+
+			up_scale_image(
+					pic, pic.width, pic.height, channels,
+					resampled, new_width, new_height );
+
+			SOIL_save_image( pic, SOIL_SAVE_TYPE_BMP,
+							new_width, new_height, channels,
+							resampled );
+
+			SOIL_free_image_data( pic );
+			pic = resampled;
+			width = new_width;
+			height = new_height;
+
+		}
+	}
+**/
 
