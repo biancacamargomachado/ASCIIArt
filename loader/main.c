@@ -50,15 +50,20 @@ int main(int argc, char** argv)
     FILE *picture; // Ponteiro que aponta para um arquivo
     picture = fopen("result.html", "w"); // w = write // cria um arq no dir do codigo
     printf("Toda a imagem! VAI DEMORAR :\n");
-
+    fprintf(picture,"<html><head></head>");
+    fprintf(picture,"<html><body>");
+    fprintf(picture,"<style> pre {color: white;font-family: Courier;} body {background-color:black;}</style>");
+    fprintf(picture, "<pre>");
     for (int i=0, j=0; i<size; i++,j++){
         if ((x-1)==j){
             fprintf(picture,"<br> \n");
             j=0;
         }
             fprintf(picture,"[%02X %02X %02X] ", pic.img[i].r, pic.img[i].g, pic.img[i].b);
-            //printf("[%02X %02X %02X] ", pic.img[i].r, pic.img[i].g, pic.img[i].b);
     }
+    fprintf(picture, "</pre>");
+    fprintf(picture,"</body></html>");
+
     printf("size %d --tirar depois", size);
     printf("\n");
 
