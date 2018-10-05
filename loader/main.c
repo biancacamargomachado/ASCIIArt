@@ -96,16 +96,15 @@ int mediaBloco(Img *pic,int inicio,int fim, int fator){
     return media;
 }
 
-
 int main(int argc, char** argv)
 {
     int option,option2;
     int correcao = 0;
     printf("Para imprimir com fundo preto digite 0 e branco digite 1: \t");
     scanf("%d",&option);
-    printf("/n Para imprimir com reducao digite 2 e sem reducao digite 1: \t");
+    printf("Para imprimir com reducao digite 2 e sem reducao digite 1: \t");
     scanf("%d",&option2);
-    printf("/n Correcao: \t");
+    printf("Correcao: \t");
     if(option2==2)
     scanf("%d",&correcao);
 
@@ -126,13 +125,11 @@ int main(int argc, char** argv)
             intensidade = (unsigned int)(pic.img[i].r*0.3 + pic.img[i].g*0.59 + pic.img[i].b*0.11);
             alterar_cor(&pic,intensidade);
     }
-    printf("Carregando...");
+    printf("PRONTO! Acesse o arquivo");
 
     // Impressao do html
     FILE *picture; // Ponteiro que aponta para um arquivo
     picture = fopen("result.html", "w"); // w = write // cria um arq no dir do codigo
-
-    printf("Toda a imagem! VAI DEMORAR :\n");
     fprintf(picture,"<html><head></head>");
     fprintf(picture,"<html><body>");
 
@@ -144,38 +141,35 @@ int main(int argc, char** argv)
     }
 
     fprintf(picture, "<pre>");
-if (option2==1){
-    for (int i=0, j=0; i<size; i++,j++){
-        if ((x)==j){//controlar a largura
-            fprintf(picture,"<br>");
-            j=0;
-        }
-            fprintf(picture,"%c%c%c",getAsc(pic.img[i].r),getAsc(pic.img[i].r),getAsc(pic.img[i].r));
-    }
-}
-if (option2==2){
-    int trocar=8;
-    int teste = corrige(&pic,correcao);
-    printf("CORIGE %d",teste);
-    fprintf(picture, "<pre>");
-    for(int k=0, j=0;k<size;k = k + trocar, j++){
-    	if ((pic.width)==j){
-    		fprintf(picture,"<br>");
-            j=0;
+    if (option2==1){
+        for (int i=0, j=0; i<size; i++,j++){
+            if ((x)==j){//controlar a largura
+                fprintf(picture,"<br>");
+                j=0;
             }
-        unsigned char carcMedio = mediaBloco(&pic,k,k+trocar, trocar);
-        printf("%c",getAsc(carcMedio));
-        fprintf(picture,"%c", getAsc(carcMedio));
+                fprintf(picture,"%c%c%c",getAsc(pic.img[i].r),getAsc(pic.img[i].r),getAsc(pic.img[i].r));
+        }
     }
-}
+    if (option2==2){
+        int trocar=correcao;
+        //int teste = corrige(&pic,correcao);
+
+        //printf("CORrIGE %d",teste);
+        fprintf(picture, "<pre>");
+        for(int k=0, j=0;k<size;k = k + trocar, j++){
+            if ((pic.width/correcao)==j){
+                fprintf(picture,"<br>");
+                j=0;
+                }
+            unsigned char carcMedio = mediaBloco(&pic,k,k+trocar, trocar);
+            printf("%c%c",getAsc(carcMedio),getAsc(carcMedio));
+            fprintf(picture,"%c", getAsc(carcMedio));
+        }
+    }
     fprintf(picture, "</pre>");
     fprintf(picture,"</body></html>");
-
-
     printf("\n");
 
     free(pic.img);
-
-
 }
 
