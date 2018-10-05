@@ -33,13 +33,52 @@ int load(char* name, Img* pic)
    return pic->height*pic->width;
 }
 
-void alterar_cor(int height, int width,Img *pic, double intensidade)
+void alterar_cor(Img *pic, unsigned int intensidade)
 {
-    pic->height = height;
-    pic->width = width;
     pic->img->r = intensidade;
     pic->img->g = intensidade;
     pic->img->b = intensidade;
+}
+
+char getAsc(unsigned char color)
+{
+    float value = 0;
+
+    if((int)color!=0)
+        value = (float) ((float)color / 255);
+
+    if(value==0)
+        return '#'; //mais intenso
+    else{
+        if(value<=0.1) //outros menos intenso que podem dar float
+            return '@';
+        else if(value<=0.2)
+            return '0';
+        else if(value<=0.4)
+            return 'O';
+        else if(value<=0.5)
+            return 'C';
+        else if(value<=0.5647)
+            return 'M';
+        else if(value<=0.6)
+            return 'o';
+        else if(value<=0.6556)
+            return 'B';
+        else if(value<=0.7)
+            return 'c';
+        else if(value<=0.72)
+            return 'Z';
+        else if(value<=0.7725)
+            return '|';
+        else if(value<=0.8)
+            return ':';
+        else if(value<=0.8549)
+            return '*';
+        else if(value<=0.9)
+            return '.';
+        else if(value<=1)
+            return ' ';
+    }
 }
 
 int main(int argc, char** argv)
@@ -49,37 +88,20 @@ int main(int argc, char** argv)
         printf("loader [img]\n");
         exit(1);
     }
-    int size = load(argv[1], &pic);
 
+    int size = load(argv[1], &pic);
     int y=pic.height;
     int x=pic.width;
 
-    int image[pic.width][pic.height];
-
-    // armazena o cinza no pixel
-   // EscreveCor(x,y,i,i,i) # x,y,r,g,b
     //tons de cinza
-    int intensidade = 0;
-    /*for (int i=0; i<5; i++){
-        int intensidade = (int)(0.3 * pic.img[i].r + 0.59 * pic.img[i].g + 0.11 * pic.img[i].b);
-        printf("%d \n",intensidade);
-        //printf("[%02X %02X %02X] ", pic.img[i].r, pic.img[i].g, pic.img[i].b);
-        //alterar_cor(&pic.img[i],(0.3 * pic.img[i].r + 0.59 * pic.img[i].g + 0.11 * pic.img[i].b));
-       // printf("[%02X %02X %02X] ", pic.img[i].r, pic.img[i].g, pic.img[i].b);
-    }*/
-    for (int i = 0; i < pic.height; i ++) {
-        //grayImage[i] = (int) ((int)image->img[i].r*0.3 + (int)image->img[i].g*0.59 + (int)image->img[i].b*0.11);
-        for (int j = 0; j < pic.width; j++) {
-            intensidade = (int) ((float)pic.img[i*pic.width+j].r*0.3 + (float)pic.img[i*pic.width+j].g*0.59 + (float)pic.img[i*pic.width+j].b*0.11);
+    unsigned int intensidade = 0;
+    for (int i = 0; i < size; i ++) {
+            intensidade = (unsigned int)(pic.img[i].r*0.3 + pic.img[i].g*0.59 + pic.img[i].b*0.11);
             printf(" %d ",intensidade);
-            alterar_cor(i,j,&pic,(0.3 * pic.img[i].r + 0.59 * pic.img[i].g + 0.11 * pic.img[i].b));
-            //continuar
-        }
-
+            alterar_cor(&pic,intensidade);
     }
-    printf("a");
-    // Impressao do html
 
+    // Impressao do html
     FILE *picture; // Ponteiro que aponta para um arquivo
     picture = fopen("result.html", "w"); // w = write // cria um arq no dir do codigo
     printf("Toda a imagem! VAI DEMORAR :\n");
@@ -88,11 +110,11 @@ int main(int argc, char** argv)
     fprintf(picture,"<style> pre {color: white;font-family: Courier;} body {background-color:black;}</style>");
     fprintf(picture, "<pre>");
     for (int i=0, j=0; i<size; i++,j++){
-        if ((x-1)==j){
-            fprintf(picture,"<br> \n");
+        if ((x)==j){//controlar a largura
+            fprintf(picture,"<br>");
             j=0;
         }
-            fprintf(picture,"[%02X %02X %02X] ", pic.img[i].r, pic.img[i].g, pic.img[i].b);
+            fprintf(picture,"%c%c%c",getAsc(pic.img[i].r),getAsc(pic.img[i].r),getAsc(pic.img[i].r));
     }
     fprintf(picture, "</pre>");
     fprintf(picture,"</body></html>");
