@@ -40,6 +40,12 @@ void alterar_cor(Img *pic, unsigned int intensidade)
     pic->img->b = intensidade;
 }
 
+int corrige(Img *pic,int corre)
+{
+    unsigned int tamBlocos = (pic->height * (corre/100.1f));
+    return tamBlocos;
+}
+
 char getAsc(unsigned char color)
 {
     float value = 0;
@@ -81,8 +87,28 @@ char getAsc(unsigned char color)
     }
 }
 
+int mediaBloco(Img *pic,int inicio,int fim, int fator){
+    int soma = 0;
+    for(int i=inicio;i<fim;i++){
+        soma = soma + pic->img[i].r;
+    }
+    unsigned int media = soma/fator;
+    return media;
+}
+
+
 int main(int argc, char** argv)
 {
+    int option,option2;
+    int correcao = 0;
+    printf("Para imprimir com fundo preto digite 0 e branco digite 1: \t");
+    scanf("%d",&option);
+    printf("/n Para imprimir com reducao digite 2 e sem reducao digite 1: \t");
+    scanf("%d",&option2);
+    printf("/n Correcao: \t");
+    if(option2==2)
+    scanf("%d",&correcao);
+
     Img pic;
     if(argc < 1) {
         printf("loader [img]\n");
@@ -101,14 +127,25 @@ int main(int argc, char** argv)
             alterar_cor(&pic,intensidade);
     }
 
+
+
     // Impressao do html
     FILE *picture; // Ponteiro que aponta para um arquivo
     picture = fopen("result.html", "w"); // w = write // cria um arq no dir do codigo
+
     printf("Toda a imagem! VAI DEMORAR :\n");
     fprintf(picture,"<html><head></head>");
     fprintf(picture,"<html><body>");
-    fprintf(picture,"<style> pre {color: white;font-family: Courier;} body {background-color:black;}</style>");
+
+    if (option==1){
+            fprintf(picture,"<style> pre {color: black;font-family: Courier;} body {background-color:white;}</style>");
+    }
+    if (option==0){
+            fprintf(picture,"<style> pre {color: white;font-family: Courier;} body {background-color:black;}</style>");
+    }
+
     fprintf(picture, "<pre>");
+if (option2==1){
     for (int i=0, j=0; i<size; i++,j++){
         if ((x)==j){//controlar a largura
             fprintf(picture,"<br>");
@@ -116,40 +153,30 @@ int main(int argc, char** argv)
         }
             fprintf(picture,"%c%c%c",getAsc(pic.img[i].r),getAsc(pic.img[i].r),getAsc(pic.img[i].r));
     }
+}
+if (option2==2){
+    int trocar=8;
+    int teste = corrige(&pic,correcao);
+    printf("CORIGE %d",teste);
+    fprintf(picture, "<pre>");
+    for(int k=0, j=0;k<size;k = k + trocar, j++){
+    	if ((pic.width)==j){
+    		fprintf(picture,"<br>");
+            j=0;
+            }
+        unsigned char carcMedio = mediaBloco(&pic,k,k+trocar, trocar);
+        printf("%c",getAsc(carcMedio));
+        fprintf(picture,"%c", getAsc(carcMedio));
+    }
+}
     fprintf(picture, "</pre>");
     fprintf(picture,"</body></html>");
 
-    printf("size %d --tirar depois", size);
+
     printf("\n");
 
     free(pic.img);
 
 
 }
-
-/*
-void resize (){
-    Img pic;
-	int new_width = 1;
-	int new_height = 1;
-
-		if( (new_width != pic.width) || (new_height != pic.height) ){
-			unsigned char *resampled = (unsigned char*)malloc( channels*new_width*new_height );
-
-			up_scale_image(
-					pic, pic.width, pic.height, channels,
-					resampled, new_width, new_height );
-
-			SOIL_save_image( pic, SOIL_SAVE_TYPE_BMP,
-							new_width, new_height, channels,
-							resampled );
-
-			SOIL_free_image_data( pic );
-			pic = resampled;
-			width = new_width;
-			height = new_height;
-
-		}
-	}
-**/
 
